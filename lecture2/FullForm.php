@@ -5,16 +5,13 @@ $DATABASE_USER = "root";
 $DATABASE_PASS = "";
 $DATABASE_NAME = "fullform";
 
-
 $conn = mysqli_connect($DATABASE_HOSTNAME, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
 
 if (!$conn) {
     die("Database is not connected Something wrong");
 }
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
     $classX_board = $_POST["classX_board"];
     $classX_percentage = $_POST["classX_percentage"];
     $classX_year = $_POST["classX_year"];
@@ -31,30 +28,58 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $masters_percentage = $_POST["masters_percentage"];
     $masters_year = $_POST["masters_year"];
 
-
-    $insertsql = "INSERT INTO qualification ( Board_name, user_Percentage, Year_of_Passing) 
-    VALUES ('$classX_board', '$classX_percentage', '$classX_year'),
-           ('$classXII_board', '$classXII_percentage', '$classXII_year'),
-           ('$graduation_board', '$graduation_percentage', '$graduation_year'),
-           ('$masters_board', '$masters_percentage', '$masters_year');";
-
+    $insertsql = "INSERT INTO qualification (Board_name, user_Percentage, Year_of_Passing) 
+                  VALUES ('$classX_board', '$classX_percentage', '$classX_year'),
+                         ('$classXII_board', '$classXII_percentage', '$classXII_year'),
+                         ('$graduation_board', '$graduation_percentage', '$graduation_year'),
+                         ('$masters_board', '$masters_percentage', '$masters_year');";
 
     $connect_query = mysqli_query($conn, $insertsql);
-
 
     if ($connect_query) {
         echo "<script> alert('Update')</script>";
     } else {
-        echo "<script> alert('not upadte Check Form')</script>";
+        echo "<script> alert('not update Check Form')</script>";
+    }
+
+    if ($_POST['submit']) {
+        $first_name = $_POST['first_name'];
+        $last_name = $_POST['last_name'];
+        $DOB = $_POST['DOB'];
+        $user_email = $_POST['user_email'];
+        $user_num = $_POST['mobile_num'];
+        $user_gender = $_POST['user_gender'];
+        $user_address = $_POST['user_address'];
+        $user_city = $_POST['user_city'];
+        $user_pin_code = $_POST['user_pin_code'];
+        $user_state = $_POST['user_state'];
+        $user_country = $_POST['user_counthobbies'];
+        $user_hobbies = $_POST['user_hobbies'];
+        $user_applied_courses = $_POST['user_applied_courses'];
+
+        $select_query = "SELECT * from qualification";
+        $con_query = mysqli_query($conn, $select_query);
+        $Result = mysqli_fetch_assoc($con_query);
+
+        $qualification_id = $Result['Qualification_id']; // Assuming this is the correct column name
+
+        $insert_sql_query = "INSERT INTO `user_data`(`user_first_name`, `user_last_name`, `user_dob`, `user_email`, `user_num`, `user_gender`, `user_address`, `user_city`, `user_pin`, `user_state`, `user_country`, `user_hobbies`, `user_qualification`, `user_applied_courses`) 
+                            VALUES ('$first_name','$last_name','$DOB','$user_email','$user_num','$user_gender','$user_address','$user_city','$user_pin_code','$user_state','$user_country','$user_hobbies','$qualification_id','$user_applied_courses')";
+
+        $insert_query_result = mysqli_query($conn, $insert_sql_query);
+
+        if ($insert_query_result) {
+            echo ("<div class='alert alert-success'>Update done</div>");
+        } else {
+            echo ("<div class='alert alert-danger'>Update failed</div>");
+        }
     }
 }
 
-
-
-
-
-
 ?>
+
+<!-- The rest of your HTML remains unchanged -->
+
 
 
 <!DOCTYPE html>
@@ -114,7 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
                         if ($insert_sql_query) {
-                            echo("<div class='alert alert-success'>Update done</div>");
+                            echo ("<div class='alert alert-success'>Update done</div>");
                         }
                     }
                 }
